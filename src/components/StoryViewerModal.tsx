@@ -13,6 +13,7 @@ import {
   Pause,
   Play,
   Trash2,
+  Sparkles,
 } from 'lucide-react';
 import { formatTimeRemaining } from '../services/eventStore';
 
@@ -192,7 +193,10 @@ export const StoryViewerModal: React.FC<StoryViewerModalProps> = ({
                 <span className="text-sm font-bold text-white tracking-wide">
                   {currentEvent.clubName || currentEvent.authorName || 'CBIT Student'}
                 </span>
-                <ShieldCheck className="w-3.5 h-3.5 text-[#e63946]" />
+                <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 text-[9px] font-bold border border-emerald-500/30 flex items-center gap-0.5">
+                  <Sparkles className="w-2.5 h-2.5 text-emerald-400" />
+                  <span>AI Discovered</span>
+                </span>
               </div>
               <p className="text-[11px] text-white/70 flex items-center gap-1">
                 <MapPin className="w-3 h-3 text-[#e63946]" />
