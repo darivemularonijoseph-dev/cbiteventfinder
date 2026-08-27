@@ -224,6 +224,95 @@ def post_to_firestore(event_data, proof_url):
 # ---------------------------------------------------------------------------
 # MAIN AUTOMATED SCANNER PIPELINE
 # ---------------------------------------------------------------------------
+def process_telegram_messages():
+    print("\n[TELEGRAM] Checking Telegram bot for manually forwarded stories...")
+    offset_file = os.path.join(os.path.dirname(__file__), "tg_offset.txt")
+    offset = 0
+    if os.path.exists(offset_file):
+        with open(offset_file, "r") as f:
+            try:
+                offset = int(f.read().strip())
+            except ValueError:
+                pass
+
+    try:
+        r = requests.get(f"{TELEGRAM_API_URL}/getUpdates?offset={offset}&timeout=10", timeout=15)
+        updates = r.json().get("result", [])
+    except Exception as e:
+        print(f"Error fetching Telegram updates: {e}")
+        return
+
+    if not updates:
+        print("[TELEGRAM] No new manual story submissions found.")
+
+    for update in updates:
+        update_id = update["update_id"]
+        offset = max(offset, update_id + 1)
+        
+        msg = update.get("message", {})
+        chat_id = msg.get("chat", {}).get("id")
+        
+        if "photo" in msg:
+            print(f"[TELEGRAM] Received a photo from user {chat_id}!")
+            # Get largest photo
+            photo = msg["photo"][-1]
+            file_id = photo["file_id"]
+            
+            try:
+                # getFile
+                f_res = requests.get(f"{TELEGRAM_API_URL}/getFile?file_id={file_id}").json()
+                file_path = f_res["result"]["file_path"]
+                img_url = f"https://api.telegram.org/file/bot{BOT_TOKEN}/{file_path}"
+                
+                # Download bytes
+                img_bytes = requests.get(img_url).content
+                caption = msg.get("caption", "Forwarded from Telegram Admin")
+                
+                print(f"🧠 Passing Telegram photo to Gemini AI...")
+                parsed = analyze_flyer_with_gemini(image_bytes=img_bytes, text_caption=caption, club_name="Telegram Admin")
+                
+                if parsed.get("is_event"):
+                    print(f"🎯 EVENT DETECTED: {parsed['title']} at {parsed['locationId']}")
+                    cloud_img = upload_to_cloudinary(img_bytes)
+                    
+                    # post to firestore
+                    event_data = {
+                        "fields": {
+                            "title": {"stringValue": parsed["title"]},
+                            "description": {"stringValue": parsed["description"]},
+                            "locationId": {"stringValue": parsed["locationId"]},
+                            "locationName": {"stringValue": CBIT_LANDMARKS.get(parsed["locationId"], "Unknown Venue")},
+                            "proofImageUrl": {"stringValue": cloud_img},
+                            "authorName": {"stringValue": "Searched by AI"},
+                            "createdAt": {"integerValue": str(int(time.time() * 1000))},
+                            "expiresAt": {"integerValue": str(int((time.time() + 86400 * 30) * 1000))}
+                        }
+                    }
+                    
+                    tags_array = []
+                    for tag in parsed.get("tags", []):
+                        tags_array.append({"stringValue": tag})
+                    if tags_array:
+                        event_data["fields"]["tags"] = {"arrayValue": {"values": tags_array}}
+                    
+                    resp = requests.post(FIRESTORE_URL, json=event_data)
+                    
+                    if resp.status_code == 200:
+                        print("✅ Successfully auto-posted Telegram submission.")
+                        requests.post(f"{TELEGRAM_API_URL}/sendMessage", json={"chat_id": chat_id, "text": f"✅ BOOM! Your story '{parsed['title']}' was just analyzed by Gemini and posted to the live map! ✨"})
+                    else:
+                        print(f"❌ Error posting: {resp.text}")
+                        requests.post(f"{TELEGRAM_API_URL}/sendMessage", json={"chat_id": chat_id, "text": f"❌ Error posting to map: {resp.text}"})
+                else:
+                    print("⚠️ Gemini rejected the image (not an event).")
+                    requests.post(f"{TELEGRAM_API_URL}/sendMessage", json={"chat_id": chat_id, "text": "Hmm, Gemini didn't detect any CBIT event in this image. Make sure it's an event flyer!"})
+            except Exception as e:
+                print(f"Error processing Telegram photo: {e}")
+        
+    with open(offset_file, "w") as f:
+        f.write(str(offset))
+
+
 def run_full_auto_scan():
     print("🚀 Starting Automated Apify + Gemini + Firebase Campus Scanner...")
     
@@ -320,6 +409,8 @@ def run_full_auto_scan():
                     )
                     notify_telegram(alert_msg)
                     print(f"✅ Posted & Alerted: {parsed['title']}")
+
+        process_telegram_messages()
 
         print(f"✨ Scan finished. {new_events_count} new events pinned automatically.")
 
