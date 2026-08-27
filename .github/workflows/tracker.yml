@@ -1,13 +1,13 @@
-name: CBIT Club 24/7 Cloud Tracker
+name: CBIT 100% Full-Auto Cloud Event Scanner
 
 on:
   schedule:
-    # Runs automatically every 30 minutes in the cloud (24/7)
+    # Runs automatically every 30 minutes 24/7 in the cloud
     - cron: '*/30 * * * *'
   workflow_dispatch: # Allows manual trigger anytime from GitHub
 
 jobs:
-  track-clubs:
+  auto-scan-cbit-clubs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -21,11 +21,11 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install -r bot/requirements.txt
+          pip install requests google-genai pillow apify-client
 
-      - name: Run Cloud Event Tracker
+      - name: Run Full-Auto Scanner
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || '8512812311:AAF0qPIAGrwOZ05YojhppZhiW8xMIgqW_2E' }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          python bot/bot.py --cron
+          python bot/auto_scanner.py
