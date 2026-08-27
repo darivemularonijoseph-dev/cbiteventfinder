@@ -1,14 +1,30 @@
 [
   { "name": "IEEE CBIT Student Branch", "handle": "ieee_cbitsb", "category": "technical" },
-  { "name": "CBIT Open Source Community", "handle": "cosccbit", "category": "technical" },
-  { "name": "Street Cause CBIT", "handle": "streetcausecbit", "category": "service" },
+  { "name": "CBIT Open Source Community (COSC)", "handle": "cosccbit", "category": "technical" },
+  { "name": "GDSC / GDG on Campus CBIT", "handle": "gdsc_cbit", "category": "technical" },
+  { "name": "Robotics & Innovation Club (RIC)", "handle": "cbit_robotics", "category": "technical" },
+  { "name": "Sudhee (National Tech Fest)", "handle": "sudhee_cbit", "category": "tech_fest" },
+  { "name": "SAE CBIT (Automotive)", "handle": "sae_cbit", "category": "technical" },
+  { "name": "ASME CBIT", "handle": "asme_cbit", "category": "technical" },
+
   { "name": "Chaitanya Samskruthi", "handle": "chaitanya_samskruthi", "category": "cultural" },
-  { "name": "Chaitanya Lasya (Dance)", "handle": "chaitanyalasya", "category": "cultural" },
-  { "name": "Chaitanya Geethi (Music)", "handle": "chaitanyageethi", "category": "cultural" },
-  { "name": "Chaitanya Photography Club", "handle": "cpc_cbit", "category": "media" },
-  { "name": "Robotics & Innovation Club", "handle": "cbit_robotics", "category": "technical" },
+  { "name": "Shruthi (Annual Cultural Fest)", "handle": "shruthi_cbit", "category": "cultural_fest" },
+  { "name": "Chaitanya Lasya (Dance Club)", "handle": "chaitanyalasya", "category": "dance" },
+  { "name": "Chaitanya Geethi (Music Club)", "handle": "chaitanyageethi", "category": "music" },
+  { "name": "Chaitanya Srujana (Art & Craft)", "handle": "chaitanyasrujana", "category": "arts" },
+  { "name": "Chaitanya Photography Club (CPC)", "handle": "cpc_cbit", "category": "media" },
+
+  { "name": "Chaitanya Kreeda (Sports)", "handle": "chaitanyakreeda", "category": "sports" },
+  { "name": "Aura (National Sports Fest)", "handle": "aura_cbit", "category": "sports_fest" },
+  { "name": "CBIT Sports Club", "handle": "cbit_sports", "category": "sports" },
+
+  { "name": "Street Cause CBIT", "handle": "streetcausecbit", "category": "service" },
   { "name": "Rotaract Club of CBIT", "handle": "rotaract_cbit", "category": "service" },
+  { "name": "NSS CBIT", "handle": "nss_cbit", "category": "service" },
+  { "name": "Engineers Without Borders (EWB)", "handle": "ewb_cbit", "category": "service" },
+
+  { "name": "E-Cell & EDC CBIT", "handle": "ecellcbit", "category": "entrepreneurship" },
+  { "name": "CBIT Model United Nations (MUN)", "handle": "cbitmunhyd", "category": "literary" },
   { "name": "CBIT Toastmasters", "handle": "toastmasters_cbit", "category": "literary" },
-  { "name": "Communicando CBIT", "handle": "communicando_cbit", "category": "literary" },
-  { "name": "Chaitanya Kreeda (Sports)", "handle": "cbit_sports", "category": "sports" }
+  { "name": "Communicando CBIT", "handle": "communicando_cbit", "category": "literary" }
 ]
