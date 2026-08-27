@@ -258,12 +258,16 @@ export const EventDetailPopup: React.FC<EventDetailPopupProps> = ({
 
                     {/* Author / AI Discovery credit */}
                     <div className="mt-2 flex items-center gap-1.5 text-[11px] text-white/60">
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium text-[10px] flex items-center gap-1">
-                        <Sparkles className="w-2.5 h-2.5" />
-                        <span>Searched by AI</span>
-                      </span>
-                      {currentEvent.authorName && !currentEvent.authorName.toLowerCase().includes('auto') && !currentEvent.authorName.toLowerCase().includes('kreeda') && (
-                        <span>via {currentEvent.authorName}</span>
+                      {currentEvent.authorName && (currentEvent.authorName.toLowerCase().includes('searched by ai') || currentEvent.authorName.toLowerCase().includes('auto')) ? (
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium text-[10px] flex items-center gap-1">
+                          <Sparkles className="w-2.5 h-2.5" />
+                          <span>Searched by AI</span>
+                        </span>
+                      ) : (
+                        <p className="flex items-center gap-1">
+                          <User className="w-3 h-3 text-white/40" />
+                          <span>Posted by: <strong className="text-white/80">{currentEvent.authorName || 'CBIT Student'}</strong></span>
+                        </p>
                       )}
                     </div>
                   </div>
