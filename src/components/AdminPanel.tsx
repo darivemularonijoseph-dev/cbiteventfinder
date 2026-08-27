@@ -141,7 +141,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToMap }) => {
                     setPasscode(e.target.value);
                     setErrorMsg(null);
                   }}
-                  placeholder="Enter passcode (cbitroni2026)..."
+                  placeholder="Enter secret passcode..."
                   autoFocus
                   className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 text-sm outline-none focus:border-[#e63946] focus:ring-1 focus:ring-[#e63946] transition-all font-mono"
                 />
