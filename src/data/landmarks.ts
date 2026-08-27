@@ -306,6 +306,16 @@ export const CAMPUS_LANDMARKS: Landmark[] = [
     description: 'High-energy volleyball court for intramural leagues and club matches.',
   },
   {
+    id: 'kabaddi-court',
+    name: 'Kabaddi Court',
+    shortName: 'Kabaddi Court',
+    subtitle: 'Campus Kabaddi Ground',
+    category: 'sports',
+    coordinates: [335, 535],
+    iconName: 'Shield',
+    description: 'Dedicated clay kabaddi arena for intramural matches and sports day championships.',
+  },
+  {
     id: 'cricket-ground',
     name: 'CBIT Main Cricket Ground',
     shortName: 'Cricket Ground',
