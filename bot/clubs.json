@@ -10,6 +10,8 @@
   { "name": "Chaitanya Samskruthi", "handle": "chaitanya_samskruthi", "category": "cultural" },
   { "name": "Shruthi (Annual Cultural Fest)", "handle": "shruthi_cbit", "category": "cultural_fest" },
   { "name": "Chaitanya Lasya (Dance Club)", "handle": "chaitanyalasya", "category": "dance" },
+  { "name": "United Dance Crew (UDC CBIT)", "handle": "udc_cbit", "category": "dance" },
+  { "name": "United Dance Crew (UDC)", "handle": "cbit_udc", "category": "dance" },
   { "name": "Chaitanya Geethi (Music Club)", "handle": "chaitanyageethi", "category": "music" },
   { "name": "Chaitanya Srujana (Art & Craft)", "handle": "chaitanyasrujana", "category": "arts" },
   { "name": "Chaitanya Photography Club (CPC)", "handle": "cpc_cbit", "category": "media" },
