@@ -1,0 +1,31 @@
+name: CBIT Club 24/7 Cloud Tracker
+
+on:
+  schedule:
+    # Runs automatically every 30 minutes in the cloud (24/7)
+    - cron: '*/30 * * * *'
+  workflow_dispatch: # Allows manual trigger anytime from GitHub
+
+jobs:
+  track-clubs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install -r bot/requirements.txt
+
+      - name: Run Cloud Event Tracker
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || '8512812311:AAF0qPIAGrwOZ05YojhppZhiW8xMIgqW_2E' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python bot/bot.py --cron

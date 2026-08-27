@@ -1,0 +1,6 @@
+{
+  "name": "R-ODE TO CBIT",
+  "description": "Live interactive campus event map and stories for CBIT (Chaitanya Bharathi Institute of Technology), Hyderabad.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

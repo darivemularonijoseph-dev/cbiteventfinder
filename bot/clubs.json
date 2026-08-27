@@ -1,0 +1,14 @@
+[
+  { "name": "IEEE CBIT Student Branch", "handle": "ieee_cbitsb", "category": "technical" },
+  { "name": "CBIT Open Source Community", "handle": "cosccbit", "category": "technical" },
+  { "name": "Street Cause CBIT", "handle": "streetcausecbit", "category": "service" },
+  { "name": "Chaitanya Samskruthi", "handle": "chaitanya_samskruthi", "category": "cultural" },
+  { "name": "Chaitanya Lasya (Dance)", "handle": "chaitanyalasya", "category": "cultural" },
+  { "name": "Chaitanya Geethi (Music)", "handle": "chaitanyageethi", "category": "cultural" },
+  { "name": "Chaitanya Photography Club", "handle": "cpc_cbit", "category": "media" },
+  { "name": "Robotics & Innovation Club", "handle": "cbit_robotics", "category": "technical" },
+  { "name": "Rotaract Club of CBIT", "handle": "rotaract_cbit", "category": "service" },
+  { "name": "CBIT Toastmasters", "handle": "toastmasters_cbit", "category": "literary" },
+  { "name": "Communicando CBIT", "handle": "communicando_cbit", "category": "literary" },
+  { "name": "Chaitanya Kreeda (Sports)", "handle": "cbit_sports", "category": "sports" }
+]

@@ -1,0 +1,29 @@
+{
+  "entities": {
+    "CampusEvent": {
+      "title": "CampusEvent",
+      "description": "Live campus event with verified proof image and location metadata",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 1500 },
+        "locationId": { "type": "string", "maxLength": 100 },
+        "locationName": { "type": "string", "maxLength": 150 },
+        "clubName": { "type": "string", "maxLength": 100 },
+        "authorName": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "number" },
+        "expiresAt": { "type": "number" },
+        "likesCount": { "type": "number" },
+        "tags": { "type": "array" },
+        "proofImageUrl": { "type": "string", "maxLength": 2048 }
+      },
+      "required": ["title", "description", "locationId", "locationName", "createdAt", "expiresAt", "proofImageUrl"]
+    }
+  },
+  "firestore": {
+    "/events/{eventId}": {
+      "schema": "CampusEvent",
+      "description": "Active and recent campus events"
+    }
+  }
+}

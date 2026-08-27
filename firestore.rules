@@ -1,0 +1,34 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to validate event documents
+    function isValidEvent(data) {
+      return data.title is string && data.title.size() <= 150
+        && data.description is string && data.description.size() <= 1500
+        && data.locationId is string && data.locationId.size() <= 100
+        && data.locationName is string && data.locationName.size() <= 150
+        && data.proofImageUrl is string && data.proofImageUrl.size() <= 2048
+        && data.createdAt is number
+        && data.expiresAt is number;
+    }
+
+    match /events/{eventId} {
+      // Anyone on campus can read live events
+      allow read: if true;
+      
+      // Allow posting events if valid schema with required proof
+      allow create: if isValidEvent(request.resource.data);
+      
+      // Allow updates for likes counter and admin moderation
+      allow update: if isValidEvent(request.resource.data) || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likesCount']);
+      
+      // Allow delete for admin moderation or event removal
+      allow delete: if true;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

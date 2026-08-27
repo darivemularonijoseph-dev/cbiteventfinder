@@ -1,0 +1,233 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1600" width="1000" height="1600" style="background: #e9f0f8;">
+  <defs>
+    <!-- Gradients & Filters -->
+    <linearGradient id="headerGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#071b3b"/>
+      <stop offset="100%" stop-color="#0f2b5c"/>
+    </linearGradient>
+    <linearGradient id="grassGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3d8f44"/>
+      <stop offset="100%" stop-color="#2d6f33"/>
+    </linearGradient>
+    <linearGradient id="cricketPitch" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d4b483"/>
+      <stop offset="100%" stop-color="#c19b67"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.12"/>
+    </filter>
+    <filter id="roadShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- BACKGROUND CAMPUS ZONE -->
+  <rect x="0" y="0" width="1000" height="1600" fill="#e9f2fa" />
+
+  <!-- LEFT DARK MARGIN BORDER DECORATION (as in original map) -->
+  <path d="M 0,0 L 70,0 L 70,1600 L 0,1600 Z" fill="#0c1e3d" />
+
+  <!-- TOP HEADER BANNER -->
+  <path d="M 70,0 L 1000,0 L 1000,105 Q 600,75 70,115 Z" fill="url(#headerGrad)" />
+  <text x="515" y="65" fill="#ffffff" font-family="'Times New Roman', Georgia, serif" font-size="44" font-weight="bold" letter-spacing="4" text-anchor="middle">R-ODE TO CBIT</text>
+
+  <!-- BOTTOM SPORTS GREEN FIELD -->
+  <path d="M 70,1280 L 870,1280 L 870,1600 L 70,1600 Z" fill="url(#grassGrad)" />
+  <path d="M 870,1220 L 1000,1220 L 1000,1600 L 870,1600 Z" fill="#2d6f33" />
+
+  <!-- CRICKET GROUND GRAPHICS -->
+  <ellipse cx="248" cy="1430" rx="130" ry="110" fill="#38853e" stroke="#5cb85c" stroke-width="2" stroke-dasharray="6,4" />
+  <rect x="238" y="1405" width="20" height="50" rx="3" fill="url(#cricketPitch)" />
+  <circle cx="248" cy="1430" r="4" fill="#ffffff" />
+  <text x="248" y="1560" fill="#ffffff" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">CRICKET</text>
+  <text x="248" y="1582" fill="#ffffff" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">GROUND</text>
+
+  <!-- FOOTBALL COURT GRAPHICS -->
+  <rect x="580" y="1370" width="210" height="150" rx="4" fill="#327c38" stroke="#ffffff" stroke-width="2.5" />
+  <line x1="685" y1="1370" x2="685" y2="1520" stroke="#ffffff" stroke-width="2" />
+  <circle cx="685" cy="1445" r="30" fill="none" stroke="#ffffff" stroke-width="2" />
+  <circle cx="685" cy="1445" r="3" fill="#ffffff" />
+  <!-- Goal boxes -->
+  <rect x="580" y="1410" width="30" height="70" fill="none" stroke="#ffffff" stroke-width="2" />
+  <rect x="760" y="1410" width="30" height="70" fill="none" stroke="#ffffff" stroke-width="2" />
+  <text x="685" y="1560" fill="#ffffff" font-family="system-ui, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">FOOTBALL</text>
+  <text x="685" y="1582" fill="#ffffff" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">COURT</text>
+
+  <!-- ROAD NETWORK -->
+  <g id="roads" filter="url(#roadShadow)">
+    <!-- Entrance Main Road (Vertical Central Avenue) -->
+    <path d="M 505,105 L 555,105 L 555,600 L 505,600 Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2" />
+    <line x1="530" y1="120" x2="530" y2="590" stroke="#ffffff" stroke-width="4" stroke-dasharray="16,14" />
+
+    <!-- Top North Curved Road to ICICI & Post Office -->
+    <path d="M 210,270 Q 230,220 310,210 L 450,210 Q 530,210 530,300 L 530,480" fill="none" stroke="#cbd5e1" stroke-width="36" stroke-linecap="round" />
+    <path d="M 210,270 Q 230,220 310,210 L 450,210 Q 530,210 530,300 L 530,480" fill="none" stroke="#ffffff" stroke-width="3" stroke-dasharray="14,12" />
+
+    <!-- Road to West R&E Block / Bus Bay -->
+    <path d="M 190,470 L 430,470 Q 510,470 510,540" fill="none" stroke="#cbd5e1" stroke-width="32" stroke-linecap="round" />
+
+    <!-- Main East-West Boulevard (Below Statue) -->
+    <path d="M 70,610 L 850,610 Q 880,610 880,640 L 880,1180 Q 880,1210 840,1210 L 70,1210" fill="none" stroke="#cbd5e1" stroke-width="34" stroke-linecap="round" />
+    <path d="M 70,610 L 850,610 Q 880,610 880,640 L 880,1180 Q 880,1210 840,1210 L 70,1210" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="16,14" />
+
+    <!-- Secondary East-West Roads -->
+    <!-- Row 2 Road (Below C-Block / Mech Workshop) -->
+    <path d="M 180,780 L 840,780" fill="none" stroke="#cbd5e1" stroke-width="26" />
+    <!-- Row 3 Road (Below OAT / Mech labs) -->
+    <path d="M 180,910 L 840,910" fill="none" stroke="#cbd5e1" stroke-width="26" />
+    <!-- Row 4 Road (Below Sports / Chemical) -->
+    <path d="M 180,1050 L 840,1050" fill="none" stroke="#cbd5e1" stroke-width="26" />
+
+    <!-- Vertical Internal Intersecting Roads -->
+    <!-- West Vertical Road (Behind Library / Sports) -->
+    <path d="M 180,610 L 180,1210" fill="none" stroke="#cbd5e1" stroke-width="24" />
+    <!-- Center-West Road (Mech / EEE) -->
+    <path d="M 445,610 L 445,1210" fill="none" stroke="#cbd5e1" stroke-width="26" />
+    <!-- Center-East Road (Civil / Chemistry) -->
+    <path d="M 575,610 L 575,1210" fill="none" stroke="#cbd5e1" stroke-width="26" />
+
+    <!-- East North Road to Parking -->
+    <path d="M 550,470 L 960,470" fill="none" stroke="#cbd5e1" stroke-width="30" />
+    <path d="M 770,280 Q 780,420 790,470" fill="none" stroke="#cbd5e1" stroke-width="26" stroke-linecap="round" />
+  </g>
+
+  <!-- PARKING LOT AREAS (Beige/Yellow Zones) -->
+  <g id="parking_zones">
+    <rect x="550" y="455" width="410" height="60" rx="6" fill="#fbe8cc" stroke="#e0c7a2" stroke-width="2" />
+    <line x1="650" y1="455" x2="650" y2="515" stroke="#e0c7a2" stroke-width="2" stroke-dasharray="4,4" />
+    <line x1="820" y1="455" x2="820" y2="515" stroke="#e0c7a2" stroke-width="2" stroke-dasharray="4,4" />
+    <text x="750" y="490" fill="#334155" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">PARKING LOT</text>
+  </g>
+
+  <!-- CAMPUS BUILDINGS (Warm Sand Beige #faedd9 with crisp borders #d6c3aa) -->
+  <g id="buildings" filter="url(#cardShadow)">
+
+    <!-- ICICI BANK (Top Left) -->
+    <rect x="245" y="225" width="80" height="50" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="300" y="260" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">ICICI BANK</text>
+
+    <!-- POST OFFICE (Top Center) -->
+    <rect x="370" y="195" width="130" height="55" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="435" y="220" fill="#0f172a" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">CHAITANYA</text>
+    <text x="435" y="235" fill="#0f172a" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">BHARATHI</text>
+    <text x="435" y="250" fill="#0f172a" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">POST OFFICE</text>
+
+    <!-- BUS BAY -->
+    <text x="325" y="445" fill="#0f172a" font-family="system-ui, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">BUS BAY</text>
+
+    <!-- R&E BLOCK (West) -->
+    <rect x="105" y="500" width="85" height="110" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="148" y="575" fill="#0f172a" font-family="system-ui, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">R&amp;E</text>
+    <text x="148" y="595" fill="#0f172a" font-family="system-ui, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">BLOCK</text>
+
+    <!-- STATUE (Roundabout) -->
+    <circle cx="530" cy="605" r="28" fill="#ffffff" stroke="#94a3b8" stroke-width="3" />
+    <text x="585" y="640" fill="#0f172a" font-family="system-ui, sans-serif" font-size="14" font-weight="bold">STATUE</text>
+
+    <!-- POWER CONTROL & GENERATOR ROOM (West Margin) -->
+    <rect x="75" y="690" width="85" height="75" rx="5" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="117" y="750" fill="#0f172a" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">POWER CONTROL &amp;</text>
+    <text x="117" y="765" fill="#0f172a" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">GENERATOR ROOM</text>
+
+    <!-- MAIN CENTRAL BLOCKS ROW (D&E, C, B, A) -->
+    <!-- D&E-BLOCK (CSM & Mechanical) -->
+    <rect x="220" y="660" width="190" height="60" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="315" y="700" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">D&amp;E-BLOCK</text>
+    <text x="315" y="715" fill="#475569" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">CSM &amp; MECHANICAL</text>
+
+    <!-- C-BLOCK (CSE) -->
+    <rect x="420" y="660" width="105" height="60" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="472" y="700" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">C-BLOCK</text>
+    <text x="472" y="715" fill="#475569" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">CSE</text>
+
+    <!-- B-BLOCK (MCA) -->
+    <rect x="585" y="660" width="140" height="60" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="655" y="700" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">B-BLOCK</text>
+    <text x="655" y="715" fill="#475569" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">MCA</text>
+
+    <!-- A-BLOCK (Civil) -->
+    <rect x="735" y="660" width="95" height="60" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="782" y="700" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">A-BLOCK</text>
+    <text x="782" y="715" fill="#475569" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">CIVIL</text>
+
+    <!-- AI&DS SMS BLOCK (Far East) -->
+    <rect x="855" y="675" width="90" height="160" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="900" y="785" fill="#0f172a" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">AI&amp;DS</text>
+    <text x="900" y="805" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">SMS BLOCK</text>
+
+    <!-- MECHANICAL WORKSHOP -->
+    <rect x="210" y="805" width="220" height="65" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="310" y="845" fill="#0f172a" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">MECHANICAL</text>
+    <text x="310" y="862" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">WORKSHOP</text>
+
+    <!-- OPEN AIR AUDITORIUM (OAT) -->
+    <rect x="425" y="865" width="60" height="60" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="470" y="935" fill="#0f172a" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">OPEN AIR</text>
+    <text x="470" y="950" fill="#0f172a" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">AUDITORIUM</text>
+
+    <!-- CIVIL ENGG LABS -->
+    <rect x="590" y="805" width="240" height="65" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="735" y="845" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">CIVIL ENGG LABS</text>
+
+    <!-- CBIT LIBRARY -->
+    <rect x="50" y="930" width="100" height="110" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="100" y="1010" fill="#0f172a" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">CBIT</text>
+    <text x="100" y="1030" fill="#0f172a" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">LIBRARY</text>
+
+    <!-- MECH ENGG LABS -->
+    <rect x="200" y="935" width="230" height="65" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="330" y="980" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">MECH ENGG LABS</text>
+
+    <!-- CHEMISTRY & PHYSICS LABS -->
+    <rect x="590" y="935" width="240" height="65" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="720" y="970" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">CHEMISTRY&amp;</text>
+    <text x="720" y="988" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">PHYSICS LABS</text>
+
+    <!-- CANTEEN (Far East) -->
+    <rect x="870" y="935" width="80" height="120" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="910" y="1040" fill="#0f172a" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">CANTEEN</text>
+
+    <!-- SPORTS BLOCK -->
+    <rect x="50" y="1080" width="100" height="70" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="100" y="1125" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">SPORTS</text>
+    <text x="100" y="1142" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">BLOCK</text>
+
+    <!-- L-BLOCK (EEE, IT&CSE, IOT & CSBCT) -->
+    <rect x="200" y="1070" width="230" height="65" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="315" y="1100" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">L-BLOCK</text>
+    <text x="315" y="1116" fill="#475569" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" text-anchor="middle">EEE, IT&amp;CSE (IOT &amp; CSBCT)</text>
+
+    <!-- K-BLOCK (Chemical) -->
+    <rect x="590" y="1070" width="210" height="65" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="705" y="1100" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">K-BLOCK</text>
+    <text x="705" y="1118" fill="#475569" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">CHEMICAL</text>
+
+    <!-- BASKETBALL COURT -->
+    <rect x="50" y="1185" width="100" height="90" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="100" y="1255" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">BASKETBALL</text>
+    <text x="100" y="1272" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">COURT</text>
+
+    <!-- N-BLOCK (ECE & EVL) -->
+    <rect x="200" y="1185" width="230" height="60" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="330" y="1215" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">N-BLOCK</text>
+    <text x="330" y="1232" fill="#475569" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">ECE &amp; EVL</text>
+
+    <!-- M-BLOCK (Biotechnology) -->
+    <rect x="590" y="1185" width="210" height="60" rx="6" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="705" y="1215" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">M-BLOCK</text>
+    <text x="705" y="1232" fill="#475569" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">BIOTECHNOLOGY</text>
+
+    <!-- THROWBALL COURT -->
+    <rect x="450" y="1230" width="80" height="40" rx="4" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="490" y="1255" fill="#0f172a" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">THROWBALL</text>
+    <text x="490" y="1270" fill="#0f172a" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">COURT</text>
+
+    <!-- VOLLEYBALL COURT -->
+    <rect x="545" y="1245" width="80" height="45" rx="4" fill="#faedd9" stroke="#d6c3aa" stroke-width="2" />
+    <text x="620" y="1310" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">VOLLEYBALL</text>
+    <text x="620" y="1328" fill="#0f172a" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">COURT</text>
+
+    <!-- ENTRANCE LABEL -->
+    <text x="530" y="115" fill="#0f172a" font-family="system-ui, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">ENTRANCE</text>
+  </g>
+</svg>
