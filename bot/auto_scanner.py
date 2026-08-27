@@ -120,23 +120,39 @@ Analyze this Instagram post/story from club '{club_name}'.
 Available CBIT Landmark Location IDs:
 {json.dumps(list(CBIT_LANDMARKS.keys()), indent=2)}
 
+Crucial Landmark Synonym Rules:
+- "Aerobic Room", "Aerobics Room", "Indoor Arena", "Gym", "Badminton Court", "Yoga Hall", "Sports Complex", "Sports Club" -> map to "sports-block"
+- "Kabaddi Court", "Kabaddi Arena" -> map to "kabaddi-court"
+- "Cricket Ground", "Main Turf" -> map to "cricket-ground"
+- "Football Ground", "Football Field", "Track" -> map to "football-court"
+- "Basketball Court" -> map to "basketball-court"
+- "Volleyball Court" -> map to "volleyball-court"
+- "Throwball Court" -> map to "throwball-court"
+- "OAT", "Open Air Auditorium", "Amphitheatre", "Fest Stage" -> map to "open-air-auditorium"
+- "Canteen", "Food Court", "Cafeteria", "Snack Bar" -> map to "canteen"
+- "C-Block", "CSE Department", "Coding Lab", "Hackathon Lab" -> map to "c-block"
+- "D&E Block", "CSM", "Mechanical" -> map to "de-block"
+- "R&E Block", "Incubation", "EDC Hub" -> map to "re-block"
+- "Library", "Central Library", "Study Zone" -> map to "cbit-library"
+- "Statue", "Roundabout", "Circle" -> map to "statue"
+
 Task:
-1. Is this an upcoming college event, workshop, contest, fest, sports match, audition, or campus announcement?
+1. Is this an upcoming college event, workshop, audition, fest, dance session, sports tournament, or campus announcement?
 2. If YES:
    - Extract a punchy Title (max 50 chars).
-   - Extract a clear Description (max 150 chars, include date/time if present).
-   - Match to the most accurate CBIT landmark ID (e.g. 'canteen', 'open-air-auditorium', 'c-block', 'de-block', 'sports-block', 'cricket-ground', 'statue', etc.). If not mentioned, choose 'open-air-auditorium'.
-   - Extract relevant tags (e.g. ['tech', 'workshop', 'cultural', 'dance', 'sports']).
+   - Extract a clear Description (max 160 chars, include date/time/room if present).
+   - Match to the most accurate CBIT landmark ID from the list above.
+   - Extract relevant tags (e.g. ['dance', 'udc', 'sports', 'workshop', 'tech', 'fest']).
 3. If this is just a generic selfie, meme, or unrelated picture with no event, set "is_event": false.
 
 Return JSON ONLY:
 {{
   "is_event": true,
-  "title": "Hackathon 2026",
-  "description": "24h hackathon at C-Block CSE coding lab starting 10 AM.",
-  "locationId": "c-block",
+  "title": "Event Name",
+  "description": "Event description with timing and venue",
+  "locationId": "one_of_the_cbit_location_ids",
   "clubName": "{club_name}",
-  "tags": ["tech", "coding"]
+  "tags": ["tag1", "tag2"]
 }}
 """
     try:
@@ -230,22 +246,23 @@ def run_full_auto_scan():
     try:
         client = ApifyClient(APIFY_TOKEN)
         
-        # Run Apify Instagram Scraper for Posts & Stories
+        direct_urls = [f"https://www.instagram.com/{h}/" for h in handles]
+        
+        # Run Apify Instagram Scraper with direct profile URLs
         run_input = {
-            "username": handles,
-            "resultsLimit": 2,
-            "resultsType": "posts",
-            "addParentData": False
+            "directUrls": direct_urls,
+            "resultsLimit": 3,
+            "resultsType": "posts"
         }
         
-        print("⚡ Triggering Apify Cloud Scraper (zero proxies needed)...")
-        run = client.actor("apify/instagram-scraper").call(run_input=run_input, timeout_secs=120)
+        print("⚡ Triggering Apify Cloud Scraper with direct profile URLs...")
+        run = client.actor("apify/instagram-scraper").call(run_input=run_input)
         
         if not run:
             print("Apify run did not return results.")
             return
 
-        dataset_id = run.get("defaultDatasetId")
+        dataset_id = run.default_dataset_id
         print(f"📦 Scraping complete. Fetching dataset {dataset_id}...")
 
         for item in client.dataset(dataset_id).iterate_items():
