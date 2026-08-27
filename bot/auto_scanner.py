@@ -164,7 +164,7 @@ Return JSON ONLY:
         if image_bytes:
             contents.append(types.Part.from_bytes(data=image_bytes, mime_type="image/jpeg"))
         if text_caption:
-            contents.append(text_caption)
+            contents.append(f"Instagram Post Caption:\n{text_caption}")
         contents.append(prompt)
 
         response = client.models.generate_content(
@@ -274,7 +274,15 @@ def run_full_auto_scan():
             save_processed(processed_set)
 
             caption = item.get("caption", "")
+            
+            # Smart Image Extraction: In carousels, the first image is often a logo/blank cover, 
+            # while the actual event poster with text is the 2nd or last slide.
             image_url = item.get("displayUrl") or item.get("thumbnailUrl") or ""
+            child_posts = item.get("childPosts", [])
+            if child_posts and len(child_posts) > 1:
+                # Prioritize the second image (index 1) or last image if it's a flyer
+                image_url = child_posts[-1].get("displayUrl") or image_url
+
             owner = item.get("ownerUsername", "CBIT Club")
 
             # Match club name
