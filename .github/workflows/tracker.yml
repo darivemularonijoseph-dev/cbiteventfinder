@@ -1,9 +1,11 @@
 name: CBIT 100% Full-Auto Cloud Event Scanner
 
 on:
+  push:
+    branches: [ "main" ]
   schedule:
-    # Runs automatically every 30 minutes 24/7 in the cloud
-    - cron: '*/30 * * * *'
+    # Runs automatically every 10 minutes 24/7 in the cloud
+    - cron: '*/10 * * * *'
   workflow_dispatch: # Allows manual trigger anytime from GitHub
 
 jobs:

@@ -285,7 +285,7 @@ def process_telegram_messages():
                             "proofImageUrl": {"stringValue": cloud_img},
                             "authorName": {"stringValue": "Searched by AI"},
                             "createdAt": {"integerValue": str(int(time.time() * 1000))},
-                            "expiresAt": {"integerValue": str(int((time.time() + 86400 * 30) * 1000))}
+                            "expiresAt": {"integerValue": str(int((time.time() + 86400) * 1000))}
                         }
                     }
                     
@@ -410,12 +410,25 @@ def run_full_auto_scan():
                     notify_telegram(alert_msg)
                     print(f"✅ Posted & Alerted: {parsed['title']}")
 
-        process_telegram_messages()
-
         print(f"✨ Scan finished. {new_events_count} new events pinned automatically.")
 
     except Exception as e:
         print(f"Apify scan loop error: {e}")
 
+def main():
+    print("Starting CBIT Event Finder Cloud Runner...")
+    
+    # 1. Run the main Instagram scraper
+    try:
+        run_full_auto_scan()
+    except Exception as e:
+        print(f"Critical error in Apify scraper: {e}")
+        
+    # 2. ALWAYS run the Telegram manual submission processor
+    try:
+        process_telegram_messages()
+    except Exception as e:
+        print(f"Critical error in Telegram processor: {e}")
+
 if __name__ == "__main__":
-    run_full_auto_scan()
+    main()
