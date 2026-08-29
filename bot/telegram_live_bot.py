@@ -114,8 +114,8 @@ Return JSON ONLY:
             mime = "image/webp"
             
         parts.append({
-            "inline_data": {
-                "mime_type": mime,
+            "inlineData": {
+                "mimeType": mime,
                 "data": base64.b64encode(image_bytes).decode("utf-8")
             }
         })
@@ -126,7 +126,7 @@ Return JSON ONLY:
     payload = {
         "contents": [{"parts": parts}],
         "generationConfig": {
-            "response_mime_type": "application/json",
+            "responseMimeType": "application/json",
             "temperature": 0.2
         }
     }
