@@ -209,7 +209,7 @@ Return ONLY valid JSON with this exact schema:
         contents.append(prompt)
 
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-2.0-flash",
             contents=contents,
             config=types.GenerateContentConfig(
                 response_mime_type="application/json"

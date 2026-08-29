@@ -171,19 +171,35 @@ Return JSON ONLY:
         if text_caption:
             contents.append(f"Instagram Post Caption:\n{text_caption}")
         contents.append(prompt)
+        models_to_try = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
+        last_error = None
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=contents,
-            config=types.GenerateContentConfig(response_mime_type="application/json")
-        )
-        data = json.loads(response.text.strip())
-        if data.get("locationId") not in CBIT_LANDMARKS:
-            data["locationId"] = "open-air-auditorium"
-        return data
+        for model_name in models_to_try:
+            try:
+                print(f"🧠 Calling Gemini ({model_name})...")
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=contents,
+                    config=types.GenerateContentConfig(response_mime_type="application/json")
+                )
+                raw_text = response.text.strip()
+                if raw_text.startswith("```"):
+                    raw_text = raw_text.split("```")[1]
+                    if raw_text.startswith("json"):
+                        raw_text = raw_text[4:]
+                raw_text = raw_text.strip()
+                data = json.loads(raw_text)
+                if data.get("locationId") not in CBIT_LANDMARKS:
+                    data["locationId"] = "open-air-auditorium"
+                return data
+            except Exception as model_err:
+                print(f"Gemini {model_name} failed: {model_err}")
+                last_error = model_err
+
+        return {"is_event": False, "api_error": str(last_error)}
     except Exception as e:
-        print(f"Gemini error: {e}")
-        return {"is_event": False}
+        print(f"Gemini critical error: {e}")
+        return {"is_event": False, "api_error": str(e)}
 
 def post_to_firestore(event_data, proof_url):
     now_ms = int(time.time() * 1000)
@@ -317,17 +333,23 @@ def process_telegram_messages():
                         "chat_id": chat_id,
                         "text": f"Error posting to the map. Firestore rejected the event."
                     })
-            else:
-                print("[TELEGRAM] Gemini says this is NOT an event.")
+            elif parsed.get("api_error"):
+                print(f"[TELEGRAM] Gemini API error: {parsed.get('api_error')}")
                 requests.post(f"{TELEGRAM_API_URL}/sendMessage", json={
                     "chat_id": chat_id,
-                    "text": "Hmm, the AI didn't detect a CBIT event in this image. Try sending a clearer event poster or flyer!"
+                    "text": f"⚠️ Gemini AI service notice: {parsed.get('api_error')[:150]}\n\nPlease check your GEMINI_API_KEY secret in GitHub settings."
+                })
+            else:
+                print("[TELEGRAM] Gemini analyzed image: Not an event flyer.")
+                requests.post(f"{TELEGRAM_API_URL}/sendMessage", json={
+                    "chat_id": chat_id,
+                    "text": "Hmm, the AI analyzed this image but didn't detect an event flyer. Make sure your image shows event text/date/venue!"
                 })
         except Exception as e:
             print(f"Error processing Telegram photo: {e}")
             requests.post(f"{TELEGRAM_API_URL}/sendMessage", json={
                 "chat_id": chat_id,
-                "text": f"Something went wrong processing your image. Please try again."
+                "text": f"Something went wrong processing your image ({str(e)[:100]}). Please try again."
             })
 
 
