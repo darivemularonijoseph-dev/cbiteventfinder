@@ -1,0 +1,11 @@
+services:
+  - type: worker
+    name: cbit-event-bot
+    runtime: python
+    buildCommand: pip install -r bot/requirements.txt
+    startCommand: python bot/telegram_live_bot.py
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: APIFY_TOKEN
+        sync: false
