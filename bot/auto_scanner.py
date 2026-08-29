@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import time
+import base64
 import requests
 from apify_client import ApifyClient
 
@@ -115,12 +116,12 @@ def upload_to_cloudinary(image_url_or_bytes):
 def analyze_flyer_with_gemini(image_bytes=None, text_caption="", club_name="CBIT Club"):
     prompt = f"""
 You are an AI Event Detection Assistant for CBIT (Chaitanya Bharathi Institute of Technology), Hyderabad.
-Analyze this Instagram post/story from club '{club_name}'.
+Analyze this flyer / Instagram post / story submitted for club '{club_name}'.
 
 Available CBIT Landmark Location IDs:
 {json.dumps(list(CBIT_LANDMARKS.keys()), indent=2)}
 
-Crucial Landmark Synonym Rules:
+Landmark Synonym Rules:
 - "Aerobic Room", "Aerobics Room", "Indoor Arena", "Gym", "Badminton Court", "Yoga Hall", "Sports Complex", "Sports Club" -> map to "sports-block"
 - "Kabaddi Court", "Kabaddi Arena" -> map to "kabaddi-court"
 - "Cricket Ground", "Main Turf" -> map to "cricket-ground"
@@ -137,52 +138,68 @@ Crucial Landmark Synonym Rules:
 - "Statue", "Roundabout", "Circle" -> map to "statue"
 
 Task:
-1. Is this an upcoming college event, workshop, audition, fest, dance session, sports tournament, or campus announcement?
+1. Is this a college event, workshop, audition, fest, dance session, sports tournament, hackathon, or campus announcement?
 2. If YES:
-   - Extract a punchy Title (max 50 chars).
-   - Extract a clear Description (max 160 chars, include date/time/room if present).
-   - Match to the most accurate CBIT landmark ID from the list above.
-   - Extract relevant tags (e.g. ['dance', 'udc', 'sports', 'workshop', 'tech', 'fest']).
-3. If this is just a generic selfie, meme, or unrelated picture with no event, set "is_event": false.
+   - Extract Title (max 50 chars).
+   - Extract Description (max 160 chars, include date/time/venue).
+   - Match to the most accurate CBIT landmark ID from the list above (default to "open-air-auditorium" if general campus).
+   - Extract tags (e.g. ['dance', 'sports', 'workshop', 'tech', 'fest']).
+3. If this is a personal selfie, random meme, or has zero event info, set "is_event": false.
 
 Return JSON ONLY:
 {{
   "is_event": true,
   "title": "Event Name",
   "description": "Event description with timing and venue",
-  "locationId": "one_of_the_cbit_location_ids",
+  "locationId": "open-air-auditorium",
   "clubName": "{club_name}",
-  "tags": ["tag1", "tag2"]
+  "tags": ["campus"]
 }}
 """
-    try:
-        from google import genai
-        from google.genai import types
+    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY") or ""
+    if not api_key:
+        print("CRITICAL: No GEMINI_API_KEY found in environment! Skipping AI analysis.")
+        return {"is_event": False, "api_error": "No GEMINI_API_KEY found in environment."}
 
-        api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY") or ""
-        if not api_key:
-            print("CRITICAL: No GEMINI_API_KEY found in environment! Skipping AI analysis.")
-            return {"is_event": False}
+    parts = []
+    if image_bytes:
+        mime = "image/jpeg"
+        if image_bytes.startswith(b'\x89PNG'):
+            mime = "image/png"
+        elif image_bytes.startswith(b'RIFF') and b'WEBP' in image_bytes[:16]:
+            mime = "image/webp"
+            
+        parts.append({
+            "inline_data": {
+                "mime_type": mime,
+                "data": base64.b64encode(image_bytes).decode("utf-8")
+            }
+        })
+    if text_caption:
+        parts.append({"text": f"Post Caption:\n{text_caption}"})
+    parts.append({"text": prompt})
 
-        client = genai.Client(api_key=api_key)
-        contents = []
-        if image_bytes:
-            contents.append(types.Part.from_bytes(data=image_bytes, mime_type="image/jpeg"))
-        if text_caption:
-            contents.append(f"Instagram Post Caption:\n{text_caption}")
-        contents.append(prompt)
-        models_to_try = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
-        last_error = None
+    payload = {
+        "contents": [{"parts": parts}],
+        "generationConfig": {
+            "response_mime_type": "application/json",
+            "temperature": 0.2
+        }
+    }
 
-        for model_name in models_to_try:
-            try:
-                print(f"🧠 Calling Gemini ({model_name})...")
-                response = client.models.generate_content(
-                    model=model_name,
-                    contents=contents,
-                    config=types.GenerateContentConfig(response_mime_type="application/json")
-                )
-                raw_text = response.text.strip()
+    # Use standard Google Generative Language REST endpoints
+    models_to_try = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-pro"]
+    last_error = ""
+
+    for model_name in models_to_try:
+        try:
+            print(f"🧠 Calling Google Gemini REST API ({model_name})...")
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+            resp = requests.post(url, json=payload, timeout=25)
+            
+            if resp.status_code == 200:
+                res_json = resp.json()
+                raw_text = res_json["candidates"][0]["content"]["parts"][0]["text"].strip()
                 if raw_text.startswith("```"):
                     raw_text = raw_text.split("```")[1]
                     if raw_text.startswith("json"):
@@ -192,14 +209,14 @@ Return JSON ONLY:
                 if data.get("locationId") not in CBIT_LANDMARKS:
                     data["locationId"] = "open-air-auditorium"
                 return data
-            except Exception as model_err:
-                print(f"Gemini {model_name} failed: {model_err}")
-                last_error = model_err
+            else:
+                last_error = f"HTTP {resp.status_code} on {model_name}: {resp.text}"
+                print(f"Gemini {model_name} returned: {resp.status_code} - {resp.text[:120]}")
+        except Exception as model_err:
+            last_error = str(model_err)
+            print(f"Gemini {model_name} request exception: {model_err}")
 
-        return {"is_event": False, "api_error": str(last_error)}
-    except Exception as e:
-        print(f"Gemini critical error: {e}")
-        return {"is_event": False, "api_error": str(e)}
+    return {"is_event": False, "api_error": last_error}
 
 def post_to_firestore(event_data, proof_url):
     now_ms = int(time.time() * 1000)

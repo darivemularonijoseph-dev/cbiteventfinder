@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import time
+import base64
 import requests
 
 try:
@@ -86,7 +87,7 @@ Task:
 2. If YES:
    - Extract Title (max 50 chars).
    - Extract Description (max 160 chars, include date/time/venue).
-   - Match to the most accurate CBIT landmark ID from the list.
+   - Match to the most accurate CBIT landmark ID from the list (default to "open-air-auditorium" if general campus).
    - Extract tags (e.g. ['dance', 'sports', 'workshop', 'tech', 'fest']).
 3. If it is completely unrelated (a random meme, personal selfie with no event info), set "is_event": false.
 
@@ -95,35 +96,51 @@ Return JSON ONLY:
   "is_event": true,
   "title": "Event Name",
   "description": "Event details and timing",
-  "locationId": "sports-block",
+  "locationId": "open-air-auditorium",
   "clubName": "CBIT Club",
   "tags": ["campus"]
 }}
 """
-    try:
-        from google import genai
-        from google.genai import types
+    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY") or ""
+    if not api_key:
+        return {"is_event": False, "api_error": "No GEMINI_API_KEY found in environment."}
 
-        api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY") or ""
-        if not api_key:
-            return {"is_event": False, "api_error": "No GEMINI_API_KEY found in environment."}
+    parts = []
+    if image_bytes:
+        mime = "image/jpeg"
+        if image_bytes.startswith(b'\x89PNG'):
+            mime = "image/png"
+        elif image_bytes.startswith(b'RIFF') and b'WEBP' in image_bytes[:16]:
+            mime = "image/webp"
+            
+        parts.append({
+            "inline_data": {
+                "mime_type": mime,
+                "data": base64.b64encode(image_bytes).decode("utf-8")
+            }
+        })
+    if text_caption:
+        parts.append({"text": f"Post Caption:\n{text_caption}"})
+    parts.append({"text": prompt})
 
-        client = genai.Client(api_key=api_key)
-        contents = [
-            types.Part.from_bytes(data=image_bytes, mime_type="image/jpeg"),
-            f"Telegram Caption: {text_caption}" if text_caption else "",
-            prompt
-        ]
+    payload = {
+        "contents": [{"parts": parts}],
+        "generationConfig": {
+            "response_mime_type": "application/json",
+            "temperature": 0.2
+        }
+    }
 
-        models_to_try = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
-        for model in models_to_try:
-            try:
-                response = client.models.generate_content(
-                    model=model,
-                    contents=contents,
-                    config=types.GenerateContentConfig(response_mime_type="application/json")
-                )
-                raw_text = response.text.strip()
+    models_to_try = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-pro"]
+    last_err = ""
+
+    for model in models_to_try:
+        try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+            resp = requests.post(url, json=payload, timeout=25)
+            if resp.status_code == 200:
+                res_json = resp.json()
+                raw_text = res_json["candidates"][0]["content"]["parts"][0]["text"].strip()
                 if raw_text.startswith("```"):
                     raw_text = raw_text.split("```")[1]
                     if raw_text.startswith("json"):
@@ -132,13 +149,14 @@ Return JSON ONLY:
                 if data.get("locationId") not in CBIT_LANDMARKS:
                     data["locationId"] = "open-air-auditorium"
                 return data
-            except Exception as me:
-                print(f"Model {model} failed: {me}")
-                continue
+            else:
+                last_err = f"HTTP {resp.status_code} on {model}: {resp.text}"
+                print(f"Gemini {model} returned: {resp.status_code} - {resp.text[:120]}")
+        except Exception as e:
+            last_err = str(e)
+            print(f"Gemini {model} exception: {e}")
 
-        return {"is_event": False, "api_error": "All Gemini models failed to process request."}
-    except Exception as e:
-        return {"is_event": False, "api_error": str(e)}
+    return {"is_event": False, "api_error": last_err}
 
 def run_live_bot():
     print("⚡ Starting Real-Time CBIT Telegram Bot Worker (Instant 2-Second Responses)...")
